@@ -14,20 +14,20 @@ function showScreen(name) {
 }
 
 nextButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    showScreen(button.dataset.next);
-  });
+  button.addEventListener('click', () => showScreen(button.dataset.next));
 });
 
 document.querySelector('[data-action="play-audio"]').addEventListener('click', () => {
   if (!musicPlayer.querySelector('iframe')) {
     const player = document.createElement('iframe');
-    player.src = 'https://www.youtube-nocookie.com/embed/kU1DSF-ayDA?autoplay=1&controls=0&loop=1&playlist=kU1DSF-ayDA';
-    player.title = 'Background music';
-    player.allow = 'autoplay; encrypted-media';
-    player.style.cssText = 'position:fixed;width:1px;height:1px;left:-10px;bottom:-10px;border:0';
+    player.src = 'https://www.youtube-nocookie.com/embed/kU1DSF-ayDA?autoplay=1&controls=1&playsinline=1&loop=1&playlist=kU1DSF-ayDA';
+    player.title = 'Background music — tap play if it does not start automatically';
+    player.allow = 'autoplay; encrypted-media; picture-in-picture';
+    player.referrerPolicy = 'strict-origin-when-cross-origin';
+    player.allowFullscreen = true;
     musicPlayer.appendChild(player);
   }
+  musicPlayer.classList.add('visible');
   showScreen('letter');
 });
 
