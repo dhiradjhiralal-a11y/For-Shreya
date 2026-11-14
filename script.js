@@ -17,17 +17,25 @@ nextButtons.forEach((button) => {
   button.addEventListener('click', () => showScreen(button.dataset.next));
 });
 
+// A YouTube embed may show video and its playback controls. The audio-only
+// playback URL is used here, and playback begins directly from the user's tap.
 document.querySelector('[data-action="play-audio"]').addEventListener('click', () => {
-  if (!musicPlayer.querySelector('iframe')) {
-    const player = document.createElement('iframe');
-    player.src = 'https://www.youtube-nocookie.com/embed/kU1DSF-ayDA?autoplay=1&controls=1&playsinline=1&loop=1&playlist=kU1DSF-ayDA';
-    player.title = 'Background music — tap play if it does not start automatically';
-    player.allow = 'autoplay; encrypted-media; picture-in-picture';
-    player.referrerPolicy = 'strict-origin-when-cross-origin';
-    player.allowFullscreen = true;
-    musicPlayer.appendChild(player);
+  if (!musicPlayer.querySelector('audio')) {
+    const audio = document.createElement('audio');
+    audio.src = 'https://www.youtube.com/watch?v=kU1DSF-ayDA';
+    audio.controls = false;
+    audio.loop = true;
+    audio.autoplay = true;
+    audio.preload = 'auto';
+    musicPlayer.appendChild(audio);
+    audio.play().catch(() => {
+      // Browsers may prevent remote media playback; show an explicit audio control.
+      audio.controls = true;
+      audio.play().catch(() => {});
+    });
+  } else {
+    musicPlayer.querySelector('audio').play().catch(() => {});
   }
-  musicPlayer.classList.add('visible');
   showScreen('letter');
 });
 
