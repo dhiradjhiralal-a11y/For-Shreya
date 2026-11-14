@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Sherya</title>
+    <meta
+      name="description"
+      content="A romantic letter for Sherya"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background-glow"></div>
+    <div class="floating-hearts" aria-hidden="true">
+      <span>❤</span>
+      <span>❤</span>
+      <span>❤</span>
+      <span>❤</span>
+      <span>❤</span>
+      <span>❤</span>
+    </div>
+
+    <main class="app">
+      <section class="screen active" data-screen="intro">
+        <div class="card">
+          <p class="eyebrow">A little surprise for you</p>
+          <h1>Hallo Sherya</h1>
+          <p class="message-text">
+            Thanks for scanning this code. If you are ready to discover a lovely
+            message, press next.
+          </p>
+          <button class="primary-btn next-btn" data-next="audio">Next</button>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="audio">
+        <div class="card small-card">
+          <h2>Would you like a lovely background sound?</h2>
+          <div class="choice-row">
+            <button class="primary-btn" data-action="play-audio">Yes</button>
+            <button class="secondary-btn" data-action="skip-audio">No</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="letter">
+        <div class="card letter-card">
+          <p class="letter-title">A message from Dhiradj</p>
+          <p class="message-text mini">
+            You made it so far. Click on the envelope to open the message from
+            Dhiradj.
+          </p>
+
+          <button id="envelopeButton" class="envelope" aria-label="Open letter">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body">
+              <span>✉</span>
+            </div>
+          </button>
+
+          <div id="letterPaper" class="letter-paper hidden" aria-live="polite">
+            <p>
+              I know we only met on Saturday during the Diwali procession, but I
+              genuinely enjoyed that little moment we shared.
+            </p>
+            <p>
+              Honestly, I didn’t expect to meet someone new that evening, but I’m
+              glad our paths crossed.
+            </p>
+            <p>
+              The moment I saw you, you stood out like the little flame of a diya
+              on a beautiful Diwali night. There was something about your
+              presence that caught my attention, and before I knew it, I was
+              finding every little opportunity to talk to you.
+            </p>
+            <p>
+              I remember how I kept talking to you throughout the walk, and even
+              when I wasn’t talking to you, I was telling my friend about you.
+            </p>
+            <p>
+              And remember how I kept asking for your Snapchat? Well, I guess I
+              had a reason. I wanted to stay in touch and eventually send you
+              this little message.
+            </p>
+            <p>
+              There’s something else I haven’t told you. That evening, I had
+              actually wished that I’d come across someone wearing beautiful
+              traditional Indian clothing. And then I saw you. I guess God had a
+              little surprise waiting for me that evening. 🪔
+            </p>
+            <p>
+              I don’t know what you thought of our meeting, and I completely
+              understand that you might see things differently. But I genuinely
+              thought you seemed like a lovely person, and I’d be happy to get to
+              know you better.
+            </p>
+            <p>
+              Now, before you move on to the next page, take your time. There’s a
+              little question waiting for you there.
+            </p>
+            <p>
+              Whatever your answer may be, please know that there’s no pressure.
+              I’d simply be happy if we got the chance to know each other a little
+              better.
+            </p>
+          </div>
+
+          <button class="primary-btn next-btn" data-next="final">Next</button>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="final">
+        <div class="card small-card final-card">
+          <h2>Would you like to get to know me better?</h2>
+          <div class="choice-row">
+            <a
+              class="primary-btn"
+              id="yesButton"
+              href="https://wa.me/5978655337?text=Yes%20I%20want%20to%20get%20to%20know%20you%20better"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Yes
+            </a>
+            <button class="secondary-btn" id="wrongButton">No</button>
+          </div>
+          <p id="declineMessage" class="decline-message hidden">
+            You pressed the wrong button 😄
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="musicPlayer" class="music-player" aria-hidden="true"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
