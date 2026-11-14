@@ -13,6 +13,7 @@
   <body>
     <div class="background-glow"></div>
     <div class="floating-hearts" aria-hidden="true"><span>❤</span><span>❤</span><span>❤</span><span>❤</span><span>❤</span><span>❤</span></div>
+
     <main class="app">
       <section class="screen active" data-screen="intro">
         <div class="card">
@@ -22,6 +23,7 @@
           <button class="primary-btn next-btn" data-next="audio">Next</button>
         </div>
       </section>
+
       <section class="screen" data-screen="audio">
         <div class="card small-card">
           <h2>Would you like a lovely background sound?</h2>
@@ -31,6 +33,7 @@
           </div>
         </div>
       </section>
+
       <section class="screen" data-screen="letter">
         <div class="card letter-card">
           <p class="letter-title">A message from Dhiradj</p>
@@ -50,6 +53,7 @@
           <button class="primary-btn next-btn" data-next="final">Next</button>
         </div>
       </section>
+
       <section class="screen" data-screen="final">
         <div class="card small-card final-card">
           <h2>Would you like to get to know me better?</h2>
@@ -61,6 +65,9 @@
         </div>
       </section>
     </main>
+
+    <div class="privacy-note">*(Just between us. Please respect the privacy of this little message and keep it between the two of us. ❤️)</div>
+
     <div id="musicPlayer" class="music-player" aria-label="Background music player"></div>
     <script src="script.js"></script>
   </body>
