@@ -6,6 +6,18 @@ const musicPlayer = document.getElementById('musicPlayer');
 const declineMessage = document.getElementById('declineMessage');
 const wrongButton = document.getElementById('wrongButton');
 
+// The MP3 is stored in the repository root. Keep this audio element alive
+// while changing screens so the song continues across the whole experience.
+const song = new Audio(
+  new URL(
+    'Pehla%20Nasha%20-%20Instrumental%20Pehla%20Nasha%20Pehla%20Nasha%20-%20Piano.mp3',
+    document.baseURI
+  ).href
+);
+song.loop = true;
+song.preload = 'auto';
+song.volume = 0.65;
+
 function showScreen(name) {
   screens.forEach((screen) => {
     screen.classList.toggle('active', screen.dataset.screen === name);
@@ -17,29 +29,18 @@ nextButtons.forEach((button) => {
   button.addEventListener('click', () => showScreen(button.dataset.next));
 });
 
-// A YouTube embed may show video and its playback controls. The audio-only
-// playback URL is used here, and playback begins directly from the user's tap.
-document.querySelector('[data-action="play-audio"]').addEventListener('click', () => {
-  if (!musicPlayer.querySelector('audio')) {
-    const audio = document.createElement('audio');
-    audio.src = 'https://www.youtube.com/watch?v=kU1DSF-ayDA';
-    audio.controls = false;
-    audio.loop = true;
-    audio.autoplay = true;
-    audio.preload = 'auto';
-    musicPlayer.appendChild(audio);
-    audio.play().catch(() => {
-      // Browsers may prevent remote media playback; show an explicit audio control.
-      audio.controls = true;
-      audio.play().catch(() => {});
-    });
-  } else {
-    musicPlayer.querySelector('audio').play().catch(() => {});
+document.querySelector('[data-action="play-audio"]').addEventListener('click', async () => {
+  try {
+    await song.play();
+  } catch (error) {
+    console.error('The background song could not be played:', error);
+    alert('The music could not start. Please check your phone volume and try tapping Yes again.');
   }
   showScreen('letter');
 });
 
 document.querySelector('[data-action="skip-audio"]').addEventListener('click', () => {
+  song.pause();
   showScreen('letter');
 });
 
