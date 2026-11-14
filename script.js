@@ -2,12 +2,10 @@ const screens = Array.from(document.querySelectorAll('.screen'));
 const nextButtons = document.querySelectorAll('.next-btn');
 const envelopeButton = document.getElementById('envelopeButton');
 const letterPaper = document.getElementById('letterPaper');
-const musicPlayer = document.getElementById('musicPlayer');
 const declineMessage = document.getElementById('declineMessage');
 const wrongButton = document.getElementById('wrongButton');
 
-// The MP3 is stored in the repository root. Keep this audio element alive
-// while changing screens so the song continues across the whole experience.
+// Keep the uploaded MP3 playing across screen changes.
 const song = new Audio(
   new URL(
     'Pehla%20Nasha%20-%20Instrumental%20Pehla%20Nasha%20Pehla%20Nasha%20-%20Piano.mp3',
@@ -18,24 +16,22 @@ song.loop = true;
 song.preload = 'auto';
 song.volume = 0.65;
 
-// Envelope-opening spectacle: falling roses, swirling hearts, sparkles, and a glow.
-const magicStyles = document.createElement('style');
-magicStyles.textContent = `
-  .magic-overlay{position:fixed;inset:0;z-index:20;overflow:hidden;pointer-events:none;}
-  .magic-rose,.magic-heart,.magic-sparkle{position:absolute;top:-12vh;left:var(--left);opacity:0;will-change:transform,opacity;}
-  .magic-rose{font-size:var(--size);filter:drop-shadow(0 5px 8px rgba(80,0,20,.28));animation:roseCascade var(--duration) cubic-bezier(.2,.65,.3,1) var(--delay) forwards;}
-  .magic-heart{font-size:var(--size);color:#ff477e;text-shadow:0 0 16px #ffc1d5;animation:heartDrift var(--duration) ease-out var(--delay) forwards;}
-  .magic-sparkle{font-size:var(--size);color:#fff3b0;text-shadow:0 0 14px #ffe58c;animation:sparkleDrift var(--duration) ease-out var(--delay) forwards;}
-  @keyframes roseCascade{0%{opacity:0;transform:translate3d(0,-5vh,0) rotate(0) scale(.5)}8%{opacity:1}72%{opacity:1}100%{opacity:0;transform:translate3d(var(--sway),115vh,0) rotate(var(--spin)) scale(1.15)}}
-  @keyframes heartDrift{0%{opacity:0;transform:translate3d(0,0,0) scale(.3) rotate(-20deg)}15%{opacity:1}100%{opacity:0;transform:translate3d(var(--sway),-85vh,0) scale(1.5) rotate(25deg)}}
-  @keyframes sparkleDrift{0%{opacity:0;transform:scale(.2) rotate(0)}25%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translate3d(var(--sway),65vh,0) scale(1.4) rotate(180deg)}}
-  .letter-card.magic-glow{animation:loveGlow 1.8s ease-in-out 2;}
-  .envelope.magic-pop{animation:envelopePop .75s cubic-bezier(.18,.89,.32,1.28);}
-  @keyframes loveGlow{0%,100%{box-shadow:0 18px 40px rgba(43,18,33,.4)}35%{box-shadow:0 0 45px 12px rgba(255,111,157,.78),0 0 100px 25px rgba(255,209,127,.35)}}
-  @keyframes envelopePop{0%{transform:scale(1)}35%{transform:scale(1.16) rotate(-3deg)}70%{transform:scale(.96) rotate(2deg)}100%{transform:scale(1)}}
-  @media(prefers-reduced-motion:reduce){.magic-rose,.magic-heart,.magic-sparkle,.letter-card.magic-glow,.envelope.magic-pop{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+// Define the animation once in the page stylesheet so it is easy for browsers
+// (including mobile browsers) to render the falling petals reliably.
+const magicCss = document.createElement('style');
+magicCss.textContent = `
+  .rose-rain-layer{position:fixed;inset:0;z-index:9999;overflow:hidden;pointer-events:none}
+  .rose-petal{position:absolute;top:-12vh;left:var(--x);font-size:var(--size);line-height:1;filter:drop-shadow(0 4px 5px rgba(80,0,20,.32));animation:rose-fall var(--time) linear var(--delay) both}
+  .magic-heart-pop{position:absolute;left:var(--x);bottom:-12vh;font-size:var(--size);color:#ff4d83;text-shadow:0 0 16px #ffb1cb;animation:heart-rise var(--time) ease-out var(--delay) both}
+  @keyframes rose-fall{0%{transform:translate3d(0,-5vh,0) rotate(0) scale(.7);opacity:0}8%{opacity:1}90%{opacity:1}100%{transform:translate3d(var(--drift),115vh,0) rotate(var(--spin)) scale(1.15);opacity:0}}
+  @keyframes heart-rise{0%{transform:translate3d(0,0,0) scale(.3);opacity:0}15%{opacity:1}100%{transform:translate3d(var(--drift),-115vh,0) scale(1.5) rotate(25deg);opacity:0}}
+  .letter-card.magic-bloom{animation:magic-bloom 1.1s ease-in-out 3}
+  .envelope.magic-bounce{animation:magic-bounce .8s cubic-bezier(.2,.8,.2,1.3)}
+  @keyframes magic-bloom{0%,100%{box-shadow:0 18px 40px rgba(43,18,33,.4)}50%{box-shadow:0 0 55px 16px rgba(255,87,145,.9),0 0 120px 25px rgba(255,218,139,.55)}}
+  @keyframes magic-bounce{0%{transform:scale(1)}35%{transform:scale(1.2) rotate(-5deg)}70%{transform:scale(.94) rotate(3deg)}100%{transform:scale(1)}}
+  @media(prefers-reduced-motion:reduce){.rose-petal,.magic-heart-pop,.letter-card.magic-bloom,.envelope.magic-bounce{animation-duration:1ms!important;animation-iteration-count:1!important}}
 `;
-document.head.appendChild(magicStyles);
+document.head.appendChild(magicCss);
 
 function showScreen(name) {
   screens.forEach((screen) => {
@@ -44,65 +40,53 @@ function showScreen(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function makeMagic() {
-  const overlay = document.createElement('div');
-  overlay.className = 'magic-overlay';
-  overlay.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(overlay);
+function launchRomanticMagic() {
+  const layer = document.createElement('div');
+  layer.className = 'rose-rain-layer';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(layer);
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reducedMotion) {
-    for (let i = 0; i < 34; i += 1) {
-      const rose = document.createElement('span');
-      rose.className = 'magic-rose';
-      rose.textContent = i % 4 === 0 ? '🌹' : '🌸';
-      rose.style.setProperty('--left', `${Math.random() * 100}%`);
-      rose.style.setProperty('--size', `${1.2 + Math.random() * 1.6}rem`);
-      rose.style.setProperty('--duration', `${3.8 + Math.random() * 3}s`);
-      rose.style.setProperty('--delay', `${Math.random() * 1.8}s`);
-      rose.style.setProperty('--sway', `${Math.random() * 220 - 110}px`);
-      rose.style.setProperty('--spin', `${Math.random() * 900 - 450}deg`);
-      overlay.appendChild(rose);
-    }
-
-    for (let i = 0; i < 18; i += 1) {
-      const heart = document.createElement('span');
-      heart.className = 'magic-heart';
-      heart.textContent = i % 2 ? '♥' : '❤';
-      heart.style.setProperty('--left', `${Math.random() * 100}%`);
-      heart.style.setProperty('--size', `${1 + Math.random() * 1.8}rem`);
-      heart.style.setProperty('--duration', `${2.8 + Math.random() * 2.2}s`);
-      heart.style.setProperty('--delay', `${Math.random() * 1.2}s`);
-      heart.style.setProperty('--sway', `${Math.random() * 180 - 90}px`);
-      overlay.appendChild(heart);
+    // Dense, staggered shower of rose petals, with a burst of hearts.
+    for (let i = 0; i < 56; i += 1) {
+      const petal = document.createElement('span');
+      petal.className = 'rose-petal';
+      petal.textContent = ['🌹', '🌸', '🌺', '💮'][i % 4];
+      petal.style.setProperty('--x', `${Math.random() * 100}%`);
+      petal.style.setProperty('--size', `${1.6 + Math.random() * 2.2}rem`);
+      petal.style.setProperty('--time', `${3.2 + Math.random() * 2.2}s`);
+      petal.style.setProperty('--delay', `${Math.random() * 1.1}s`);
+      petal.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
+      petal.style.setProperty('--spin', `${Math.random() * 1080 - 540}deg`);
+      layer.appendChild(petal);
     }
 
     for (let i = 0; i < 24; i += 1) {
-      const sparkle = document.createElement('span');
-      sparkle.className = 'magic-sparkle';
-      sparkle.textContent = i % 2 ? '✦' : '✨';
-      sparkle.style.setProperty('--left', `${Math.random() * 100}%`);
-      sparkle.style.setProperty('--size', `${0.8 + Math.random() * 1.4}rem`);
-      sparkle.style.setProperty('--duration', `${2.2 + Math.random() * 2}s`);
-      sparkle.style.setProperty('--delay', `${Math.random() * 1.5}s`);
-      sparkle.style.setProperty('--sway', `${Math.random() * 140 - 70}px`);
-      overlay.appendChild(sparkle);
+      const heart = document.createElement('span');
+      heart.className = 'magic-heart-pop';
+      heart.textContent = i % 2 ? '❤' : '♥';
+      heart.style.setProperty('--x', `${Math.random() * 100}%`);
+      heart.style.setProperty('--size', `${1.5 + Math.random() * 2}rem`);
+      heart.style.setProperty('--time', `${2.8 + Math.random() * 1.8}s`);
+      heart.style.setProperty('--delay', `${Math.random() * 0.8}s`);
+      heart.style.setProperty('--drift', `${Math.random() * 180 - 90}px`);
+      layer.appendChild(heart);
     }
   }
 
   const card = envelopeButton.closest('.card');
-  card.classList.remove('magic-glow');
-  envelopeButton.classList.remove('magic-pop');
-  // Restart the short glow/pop animations when the effect is triggered again.
+  card.classList.remove('magic-bloom');
+  envelopeButton.classList.remove('magic-bounce');
   void card.offsetWidth;
-  card.classList.add('magic-glow');
-  envelopeButton.classList.add('magic-pop');
+  card.classList.add('magic-bloom');
+  envelopeButton.classList.add('magic-bounce');
 
-  window.setTimeout(() => overlay.remove(), 7500);
+  window.setTimeout(() => layer.remove(), 7500);
   window.setTimeout(() => {
-    card.classList.remove('magic-glow');
-    envelopeButton.classList.remove('magic-pop');
-  }, 4000);
+    card.classList.remove('magic-bloom');
+    envelopeButton.classList.remove('magic-bounce');
+  }, 3500);
 }
 
 nextButtons.forEach((button) => {
@@ -129,7 +113,7 @@ envelopeButton.addEventListener('click', () => {
   letterPaper.classList.toggle('hidden');
   envelopeButton.classList.toggle('open', isOpening);
   envelopeButton.setAttribute('aria-expanded', String(isOpening));
-  if (isOpening) makeMagic();
+  if (isOpening) launchRomanticMagic();
 });
 
 wrongButton.addEventListener('click', () => {
